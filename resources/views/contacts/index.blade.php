@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <h1 class="pr-3">Contacts</h1>
-            <a href="" class="btn btn-primary">Add Contact</a>
+            <a href="{{ route('contacts.create') }}" class="btn btn-primary">Add Contact</a>
         </div>
         @foreach($contacts as $contact)
             <div class="row pb-3">

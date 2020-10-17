@@ -30,7 +30,7 @@ class ContactController extends Controller
      */
     public function create()
     {
-        //
+        return view('contacts.create');
     }
 
     /**
@@ -41,7 +41,31 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedFields = Validator::make($request->input(), [
+            'first_name' => ['required', 'string'],
+            'last_name' => ['required', 'string'],
+            'DOB' => ['date', 'nullable'],
+            'company_name' => ['required', 'string'],
+            'position' => ['required', 'string'],
+            'email' => ['email', 'nullable', Rule::unique('contacts')],
+        ])->validate();
+
+        if (! array_filter($request->number)) {
+            throw ValidationException::withMessages([
+                'number' => 'phone number required',
+            ]);
+        }
+
+        $contact = new Contact();
+        $contact->fill($validatedFields);
+        $contact->getConnection()->beginTransaction();
+        $contact->save();
+        foreach ($request->number as $number) {
+            PhoneNumber::create(['number' => $number, 'contact_id' => $contact->id]);
+        }
+        $contact->getConnection()->commit();
+
+        return view('contacts.index');
     }
 
     /**
