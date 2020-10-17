@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
         $this->hardCodeUser('user2');
         $this->hardCodeUser('user3');
         $this->hardCodeUser('user4');
+
+        $this->call([ContactSeeder::class]);
     }
 
     /**
