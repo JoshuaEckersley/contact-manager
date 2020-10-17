@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Validator;
 
 class ContactController extends Controller
 {
@@ -57,9 +59,9 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Contact $contact)
     {
-        //
+        return view('contacts.edit', compact('contact'));
     }
 
     /**
@@ -69,9 +71,22 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Contact $contact)
     {
-        //
+        $validatedFields = Validator::make($request->input(), [
+            'first_name' => ['required', 'string'],
+            'last_name' => ['required', 'string'],
+            'DOB' => ['date', 'nullable'],
+            'company_name' => ['required', 'string'],
+            'position' => ['required', 'string'],
+            'email' => ['email', 'nullable', Rule::unique('contacts')->ignore($contact->id)],
+        ])->validate();
+
+        $contact->fill($validatedFields);
+
+        $contact->save();
+
+        return redirect()->route('contacts.index');
     }
 
     /**

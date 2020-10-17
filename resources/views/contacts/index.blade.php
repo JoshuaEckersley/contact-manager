@@ -26,13 +26,14 @@
                     </div>
                     <div class="card-footer">
                         <span class="float-left">
-                            <a class="btn btn-info">Edit</a>
+                            <a href="{{ route('contacts.edit', ['contact' => $contact]) }}" class="btn btn-info">Edit</a>
                         </span>
                         <span class="float-right">
-                        <form method="POST" action="{{ route('contacts.destroy', ['contact' => $contact]) }}">
-                            @csrf
-                            @method('delete')
-                            <button type="submit" class="btn btn-danger">Delete</a>
+                            <form method="POST" action="{{ route('contacts.destroy', ['contact' => $contact]) }}">
+                                @csrf
+                                @method('delete')
+                                <button type="submit" class="btn btn-danger">Delete</a>
+                            </form>
                         </span>
                     </div>
                 </div>
