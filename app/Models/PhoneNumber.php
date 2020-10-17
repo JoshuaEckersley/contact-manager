@@ -9,6 +9,8 @@ class PhoneNumber extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     /**
      * Contact record the number belongs to.
      */

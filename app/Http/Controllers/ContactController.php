@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\PhoneNumber;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Validator;
 
 class ContactController extends Controller
@@ -82,9 +84,31 @@ class ContactController extends Controller
             'email' => ['email', 'nullable', Rule::unique('contacts')->ignore($contact->id)],
         ])->validate();
 
+        if (! array_filter($request->number)) {
+            throw ValidationException::withMessages([
+                'number' => 'at least one phone number required',
+            ]);
+        }
+
         $contact->fill($validatedFields);
 
+        $contact->getConnection()->beginTransaction();
+        foreach ($contact->phoneNumbers as $phoneNumber) {
+            if (! in_array($phoneNumber->number, $request->number)) {
+                $phoneNumber->delete();
+            }
+        }
+        foreach ($request->number as $number) {
+            $alreadyAssigned = $contact->phoneNumbers->firstWhere('number', $number);
+            if (
+                empty($alreadyAssigned)
+                && ! empty($number)
+            ) {
+                PhoneNumber::create(['number' => $number, 'contact_id' => $contact->id]);
+            }
+        }
         $contact->save();
+        $contact->getConnection()->commit();
 
         return redirect()->route('contacts.index');
     }

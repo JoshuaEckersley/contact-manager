@@ -5,6 +5,15 @@
         <div class="row">
             <h1>Edit Contact</h1>
         </div>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form method="POST" action="{{ route('contacts.update', ['contact' => $contact]) }}">
             @csrf
             @method('put')
@@ -38,7 +47,20 @@
                     <input type="text" name="email" value="{{ $contact->email }}"></input>
                 </label>
             </div>
+            @foreach($contact->phoneNumbers as $phoneNumber)
+                <div class="row">
+                    <label>Phone Number
+                        <input type="text" name="number[]" value="{{ $phoneNumber->number }}"></input>
+                    </label>
+                </div>
+            @endforeach
+            {{-- Blank field outside the loop to allow new number. Refactor later to add multiple at a time. --}}
             <div class="row">
+                    <label>Phone Number
+                        <input type="text" name="number[]"></input>
+                    </label>
+                </div>
+           <div class="row">
                 <button type="submit" class="btn btn-primary">Update</a>
             </div>
         </form>
