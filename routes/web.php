@@ -21,4 +21,4 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::resource('contacts', ContactController::class);
+Route::resource('contacts', ContactController::class)->middleware('auth');
