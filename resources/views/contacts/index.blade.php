@@ -29,7 +29,10 @@
                             <a class="btn btn-info">Edit</a>
                         </span>
                         <span class="float-right">
-                            <a class="btn btn-danger">Delete</a>
+                        <form method="POST" action="{{ route('contacts.destroy', ['contact' => $contact]) }}">
+                            @csrf
+                            @method('delete')
+                            <button type="submit" class="btn btn-danger">Delete</a>
                         </span>
                     </div>
                 </div>

@@ -24,4 +24,16 @@ class Contact extends Model
     {
         return $this->first_name . ' ' . $this->last_name;
     }
+
+    /**
+     * Clean-up dependent records.
+     */
+    public static function boot() {
+        parent::boot();
+        self::deleting(function($contact) {
+             $contact->phoneNumbers()->each(function($phoneNumber) {
+                $phoneNumber->delete();
+             });
+        });
+    }
 }
