@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <h1>Create Contact</h1>
+            <h1>Add Contact</h1>
         </div>
         @if ($errors->any())
             <div class="alert alert-danger">
