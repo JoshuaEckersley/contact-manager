@@ -10,7 +10,9 @@
             <div class="row pb-3">
                 <div class="card w-100">
                     <div class="card-body">
-                        <h5 class="card-title">{{ $contact->full_name }}</h5>
+                        <a href="{{ route('contacts.show', ['contact' => $contact]) }}">
+                            <h5 class="card-title">{{ $contact->full_name }}</h5>
+                        </a>
                         <h6 class="card-subtitle mb-2 text-muted">
                             {{ $contact->company_name }} &ndash; {{ $contact->position }}
                         </h6>

@@ -65,7 +65,7 @@ class ContactController extends Controller
         }
         $contact->getConnection()->commit();
 
-        return view('contacts.index');
+        return view('contacts.show', compact('contact'));
     }
 
     /**
@@ -74,9 +74,9 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Contact $contact)
     {
-        //
+        return view('contacts.show', compact('contact'));
     }
 
     /**
@@ -134,7 +134,7 @@ class ContactController extends Controller
         $contact->save();
         $contact->getConnection()->commit();
 
-        return redirect()->route('contacts.index');
+        return redirect()->route('contacts.show', compact('contact'));
     }
 
     /**
