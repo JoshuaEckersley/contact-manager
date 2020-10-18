@@ -16,11 +16,22 @@ class ContactController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $contacts = Contact::paginate(5);
+        $contactQry = Contact::query();
 
-        return view('contacts.index', compact('contacts'));
+        $searchString = $request->search_contacts ?? null;
+
+        if (isset($searchString)) {
+            $contactQry->where('first_name', 'LIKE', '%'. $searchString . '%')
+                ->orWhere('last_name', 'LIKE', '%'. $searchString . '%')
+                ->orWhere('email', 'LIKE', '%'. $searchString . '%')
+                ->orWhere('company_name', 'LIKE', '%'. $searchString . '%');
+        }
+
+        $contacts = $contactQry->paginate(5);
+
+        return view('contacts.index', compact('contacts', 'searchString'));
     }
 
     /**

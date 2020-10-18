@@ -2,10 +2,15 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
-            <h1 class="pr-3">Contacts</h1>
+        <div class="row mb-3">
+            <h1 class="mr-3">Contacts</h1>
             <a href="{{ route('contacts.create') }}" class="btn btn-primary">Add Contact</a>
         </div>
+        <form method="GET" action="{{ route('contacts.index') }}" role="search">
+                @csrf
+                <input type="text" name="search_contacts" placeholder="Search Contacts...">
+            <button class="btn btn-secondary" type="submit">Search</button>
+        </form>
         @foreach($contacts as $contact)
             <div class="row pb-3">
                 <div class="card w-100">
@@ -41,6 +46,12 @@
                 </div>
             </div>
         @endforeach
-        <div class="row">{{ $contacts->links() }}</div>
+        <div class="row">
+            @isset($searchString)
+                {{ $contacts->appends(['search_contacts' => $searchString])->links() }}
+            @else
+                {{ $contacts->links() }}
+            @endisset
+        </div>
     </div>
 @endsection
